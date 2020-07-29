@@ -1,66 +1,54 @@
-package com.thoughtworks.springbootemployee.Eason;
+package com.thoughtworks.springbootemployee.controller;
 
 import com.thoughtworks.springbootemployee.model.Employee;
+import com.thoughtworks.springbootemployee.service.EmployeeService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
 
+    private final EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
     @GetMapping
     public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(4, "alibaba1", 20, "male", 6000));
-        employees.add(new Employee(11, "tengxun2", 19, "female", 7000));
-        employees.add(new Employee(6, "alibaba3", 19, "male", 8000));
-        return employees;
+        return employeeService.findAll();
     }
 
     @GetMapping("/{id}")
     public Employee getEmployeeById(@PathVariable int id) {
-        return new Employee(id, "alibaba3", 19, "male", 8000);
+        return employeeService.findById(id);
     }
 
     @GetMapping(params = {"page", "pageSize"})
-    public List<Employee> getEmployeesPagination(int page, int pageSize) {
-        List<Employee> employees = new ArrayList<>();
-        for (int i = 0; i < pageSize; i++) {
-            employees.add(new Employee(i, "alibaba3", 19, "male", 8000));
-        }
-        return employees;
+    public Page<Employee> getEmployeesPagination(int page, int pageSize) {
+        return employeeService.findAll(page, pageSize);
     }
 
     @GetMapping(params = {"gender"})
     public List<Employee> getEmployeesByGender(String gender) {
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(4, "alibaba1", 20, "male", 6000));
-        employees.add(new Employee(11, "tengxun2", 19, "female", 7000));
-        employees.add(new Employee(6, "alibaba3", 19, "male", 8000));
-        return employees.stream().filter(employee -> employee.getGender().equals(gender)).collect(Collectors.toList());
+        return employeeService.findAllByGender(gender);
     }
 
     @PostMapping
     public Employee addEmployee(@RequestBody Employee employee) {
-        return new Employee(employee.getId(), employee.getName(), employee.getAge(), employee.getGender(), employee.getSalary());
+        return employeeService.save(employee);
     }
 
     @PutMapping("/{id}")
     public Employee updateEmployee(@PathVariable int id, @RequestBody Employee employee) {
-        Employee newEmployee = new Employee();
-        newEmployee.setId(employee.getId());
-        newEmployee.setName(employee.getName());
-        newEmployee.setGender(employee.getGender());
-        newEmployee.setAge(employee.getAge());
-        newEmployee.setSalary(employee.getSalary());
-        return newEmployee;
+        return employeeService.updateEmployee(id, employee);
     }
 
     @DeleteMapping("/{id}")
-    public Employee deleteEmployee(@PathVariable int id) {
-        return new Employee(id, "alibaba3", 19, "male", 8000);
+    public boolean deleteEmployee(@PathVariable int id) {
+        return employeeService.deleteById(id);
     }
 }
