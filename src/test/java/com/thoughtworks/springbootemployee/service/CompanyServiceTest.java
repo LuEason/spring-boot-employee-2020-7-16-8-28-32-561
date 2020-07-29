@@ -77,10 +77,10 @@ public class CompanyServiceTest {
         when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(employee -> employee.getId() == id).findFirst());
 
         //when
-        Company company = companyService.findById(id);
+        List<Employee> employees = companyService.findEmployeesById(id);
 
         //then
-        assertEquals("tencent1", company.getEmployees().get(0).getName());
+        assertEquals("tencent1", employees.get(0).getName());
     }
 
     @Test

@@ -1,10 +1,12 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyService {
@@ -47,5 +49,12 @@ public class CompanyService {
     public boolean deleteById(int id) {
         companyRepository.deleteById(id);
         return !companyRepository.findById(id).isPresent();
+    }
+
+    public List<Employee> findEmployeesById(int id) {
+        if (companyRepository.findById(id).isPresent()) {
+            return companyRepository.findById(id).get().getEmployees();
+        }
+        return new ArrayList<>();
     }
 }
