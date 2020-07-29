@@ -93,4 +93,24 @@ public class CompanyServiceTest {
         //then
         Mockito.verify(mockedCompanyRepository).findAll(PageRequest.of(page, pageSize));
     }
+
+    @Test
+    void should_return_inserted_company_when_insert_company_given_a_new_company() {
+        //given
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(6, "tencent1", 20, "male", 6000));
+        employees.add(new Employee(7, "tencent2", 19, "female", 7000));
+        employees.add(new Employee(8, "tencent3", 19, "male", 8000));
+        Company newCompany = new Company(null, "alibaba", 3, employees);
+        when(mockedCompanyRepository.save(newCompany)).thenReturn(new Company(3, "alibaba", 3, employees));
+
+        //when
+        Company returnCompany = companyService.save(newCompany);
+
+        //then
+        assertEquals(3, returnCompany.getId());
+        assertEquals(newCompany.getCompanyName(), returnCompany.getCompanyName());
+        assertEquals(newCompany.getEmployeeNumber(), returnCompany.getEmployeeNumber());
+        assertEquals(newCompany.getEmployees(), returnCompany.getEmployees());
+    }
 }

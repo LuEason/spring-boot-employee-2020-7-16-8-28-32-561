@@ -25,4 +25,8 @@ public class CompanyService {
     public Company findById(int id) {
         return companyRepository.findById(id).orElse(null);
     }
+
+    public Company save(Company newCompany) {
+        return null;
+    }
 }
