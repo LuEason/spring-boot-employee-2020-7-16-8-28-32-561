@@ -30,7 +30,17 @@ public class CompanyService {
         return companyRepository.save(newCompany);
     }
 
-    public Company updateCompany(int id, Company targetCompany) {
-        return null;
+    public Company updateCompany(int id, Company updatedCompany) {
+        Company targetCompany = findById(id);
+        if (targetCompany != null) {
+            if (updatedCompany.getCompanyName() != null)
+                targetCompany.setCompanyName(updatedCompany.getCompanyName());
+            if (updatedCompany.getEmployeeNumber() != null)
+                targetCompany.setEmployeeNumber(updatedCompany.getEmployeeNumber());
+            if (updatedCompany.getEmployees() != null)
+                targetCompany.setEmployees(updatedCompany.getEmployees());
+            save(targetCompany);
+        }
+        return targetCompany;
     }
 }
