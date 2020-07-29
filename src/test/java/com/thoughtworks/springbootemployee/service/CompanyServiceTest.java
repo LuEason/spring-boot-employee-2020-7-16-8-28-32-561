@@ -118,7 +118,7 @@ public class CompanyServiceTest {
     void should_return_updated_company_when_update_company_give_company_id_and_target_company() {
         //given
         int id = 1;
-        Company targetCompany = generateCompanies().get(0);
+        Company targetCompany = generateCompanies().get(1);
         targetCompany.setEmployeeNumber(0);
         targetCompany.setEmployees(new ArrayList<>());
         when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == id).findFirst());
