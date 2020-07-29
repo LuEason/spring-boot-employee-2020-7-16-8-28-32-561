@@ -29,4 +29,8 @@ public class CompanyService {
     public Company save(Company newCompany) {
         return companyRepository.save(newCompany);
     }
+
+    public Company updateCompany(int id, Company targetCompany) {
+        return null;
+    }
 }
