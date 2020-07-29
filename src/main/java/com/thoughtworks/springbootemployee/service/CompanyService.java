@@ -16,6 +16,10 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
+    public List<Company> findAll(int page, int pageSize) {
+        return companyRepository.findAll();
+    }
+
     public Company findById(int id) {
         return companyRepository.findById(id).orElse(null);
     }

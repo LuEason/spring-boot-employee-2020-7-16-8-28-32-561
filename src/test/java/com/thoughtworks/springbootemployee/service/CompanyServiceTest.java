@@ -6,6 +6,7 @@ import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,5 +80,17 @@ public class CompanyServiceTest {
 
         //then
         assertEquals("tencent1", company.getEmployees().get(0).getName());
+    }
+
+    @Test
+    void should_return_companies_in_the_specified_range_when_get_employees_given_page_2_and_page_size_2() {
+        //given
+        int page = 2;
+        int pageSize = 2;
+        //when
+        companyService.findAll(page, pageSize);
+
+        //then
+        Mockito.verify(mockedCompanyRepository).findAll(PageRequest.of(page, pageSize));
     }
 }
