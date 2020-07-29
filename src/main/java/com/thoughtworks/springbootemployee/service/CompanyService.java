@@ -43,4 +43,8 @@ public class CompanyService {
         }
         return targetCompany;
     }
+
+    public boolean deleteById(int id) {
+        return false;
+    }
 }
