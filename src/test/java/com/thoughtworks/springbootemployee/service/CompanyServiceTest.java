@@ -136,17 +136,19 @@ public class CompanyServiceTest {
     }
 
     @Test
-    void should_return_boolean_when_delete_company_given_id() {
+    void should_return_boolean_when_delete_company_employees_given_id() {
         //given
-        int id = 3;
-        when(mockedCompanyRepository.findById(id)).thenReturn(new ArrayList<Company>().stream().filter(employee -> employee.getId() == id).findFirst());
+        int id = 2;
+        Company targetCompany = generateCompanies().stream().filter(company -> company.getId() == id).findFirst().orElse(null);
+        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == id).findFirst());
+        Company newCompany = targetCompany;
+        newCompany.setEmployees(new ArrayList<>());
+        when(mockedCompanyRepository.save(newCompany)).thenReturn(newCompany);
 
         //when
-        boolean isDelete = companyService.deleteById(id);
+        boolean isDelete = companyService.deleteEmployeesById(id);
 
         //then
         assertTrue(isDelete);
-        Mockito.verify(mockedCompanyRepository).deleteById(id);
-
     }
 }

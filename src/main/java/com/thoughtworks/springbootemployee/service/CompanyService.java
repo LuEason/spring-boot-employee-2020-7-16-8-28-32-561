@@ -46,15 +46,21 @@ public class CompanyService {
         return targetCompany;
     }
 
-    public boolean deleteById(int id) {
-        companyRepository.deleteById(id);
-        return !companyRepository.findById(id).isPresent();
-    }
-
     public List<Employee> findEmployeesById(int id) {
         if (companyRepository.findById(id).isPresent()) {
             return companyRepository.findById(id).get().getEmployees();
         }
         return new ArrayList<>();
+    }
+
+    public boolean deleteEmployeesById(int id) {
+        Company targetCompany = companyRepository.findById(id).orElse(null);
+        if (targetCompany != null) {
+            targetCompany.setEmployees(new ArrayList<>());
+            save(targetCompany);
+            return targetCompany.getEmployees().size() == 0;
+        } else {
+            return false;
+        }
     }
 }
