@@ -67,4 +67,17 @@ public class CompanyServiceTest {
         //then
         assertEquals("tencent", company.getCompanyName());
     }
+
+    @Test
+    void should_return_tencent_employees_when_get_company_by_id_given_2() {
+        //given
+        int id = 2;
+        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(employee -> employee.getId() == id).findFirst());
+
+        //when
+        Company company = companyService.findById(id);
+
+        //then
+        assertEquals("tencent1", company.getEmployees().get(0).getName());
+    }
 }
