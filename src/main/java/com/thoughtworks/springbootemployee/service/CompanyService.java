@@ -45,6 +45,7 @@ public class CompanyService {
     }
 
     public boolean deleteById(int id) {
-        return false;
+        companyRepository.deleteById(id);
+        return !companyRepository.findById(id).isPresent();
     }
 }
