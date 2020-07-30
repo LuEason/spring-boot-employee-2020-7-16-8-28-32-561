@@ -9,10 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -90,5 +92,21 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.name").value("Xiaoxia"))
                 .andExpect(jsonPath("$.age").value(15))
                 .andExpect(jsonPath("$.gender").value("Female"));
+    }
+
+    @Test
+    void should_return_employee_list_when_hit_get_EmployeesPagination_given_page_pageSize() throws Exception {
+        //given
+        Employee firstEmployee = new Employee(3, "alibaba3", 20, "male", 6000);
+        Employee secondEmployee = new Employee(4, "alibaba4", 21, "male", 6000);
+        employeeRepository.save(firstEmployee);
+        employeeRepository.save(secondEmployee);
+
+        List<Employee> employees = employeeRepository.findAll(PageRequest.of(1, 3)).getContent();
+
+        mockMvc.perform(get("/employees?page=1&pageSize=2"))
+                .andExpect(jsonPath("$.content.size()").value(2))
+                .andExpect(jsonPath("$.content[0].name").value("alibaba3"))
+                .andExpect(jsonPath("$.content[1].name").value("alibaba4"));
     }
 }
