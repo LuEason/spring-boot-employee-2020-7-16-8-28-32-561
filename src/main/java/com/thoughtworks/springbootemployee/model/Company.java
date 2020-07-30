@@ -11,7 +11,6 @@ public class Company {
     private String companyName;
     private Integer employeeNumber;
     @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "companyId")
     private List<Employee> employees;
 
     public Company() {
