@@ -9,11 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -69,5 +71,24 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.gender").value(newEmployee.getGender()))
                 .andExpect(jsonPath("$.salary").value(newEmployee.getSalary()))
                 .andExpect(jsonPath("$.companyId").value(newCompany.getId()));
+    }
+
+    @Test
+    void should_insert_employee_when_hit_post_employee_given_employee() throws Exception {
+        //given
+        String employeeJson = "{\n" +
+                "    \"id\": 1, \n" +
+                "    \"name\": \"Xiaoxia\", \n" +
+                "    \"age\": 15, \n" +
+                "    \"gender\": \"Female\"\n" +
+                "}";
+
+        mockMvc.perform(post("/employees/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(employeeJson))
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.name").value("Xiaoxia"))
+                .andExpect(jsonPath("$.age").value(15))
+                .andExpect(jsonPath("$.gender").value("Female"));
     }
 }
