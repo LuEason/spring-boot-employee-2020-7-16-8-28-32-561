@@ -5,9 +5,12 @@ import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,11 +68,14 @@ public class EmployeeServiceTest {
         //given
         int page = 2;
         int pageSize = 2;
+        Page<Employee> expectedEmployees = new PageImpl<>(Collections.singletonList(new Employee()));
+        when(mockedEmployeeRepository.findAll(PageRequest.of(page - 1, pageSize))).thenReturn(expectedEmployees);
+
         //when
-        employeeService.findAll(page, pageSize);
+        Page<Employee> employees = employeeService.findAll(page - 1, pageSize);
 
         //then
-        Mockito.verify(mockedEmployeeRepository).findAll(PageRequest.of(page, pageSize));
+        assertEquals(expectedEmployees, employees);
     }
 
     @Test
