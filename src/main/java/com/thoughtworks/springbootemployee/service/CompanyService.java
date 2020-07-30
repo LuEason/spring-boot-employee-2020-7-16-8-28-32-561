@@ -23,7 +23,7 @@ public class CompanyService {
     }
 
     public Page<Company> findAll(int page, int pageSize) {
-        return companyRepository.findAll(PageRequest.of(page, pageSize));
+        return companyRepository.findAll(PageRequest.of(page - 1, pageSize));
     }
 
     public Company findById(int id) {

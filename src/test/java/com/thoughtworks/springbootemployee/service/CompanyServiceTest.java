@@ -6,9 +6,12 @@ import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -88,8 +91,11 @@ public class CompanyServiceTest {
         //given
         int page = 2;
         int pageSize = 2;
+        Page<Company> expectedCompanies = new PageImpl<>(Collections.singletonList(new Company()));
+        when(mockedCompanyRepository.findAll(PageRequest.of(page - 1, pageSize))).thenReturn(new PageImpl<>(expectedCompanies));
+
         //when
-        companyService.findAll(page, pageSize);
+        Page<Company> companies = companyService.findAll(page, pageSize);
 
         //then
         Mockito.verify(mockedCompanyRepository).findAll(PageRequest.of(page, pageSize));
