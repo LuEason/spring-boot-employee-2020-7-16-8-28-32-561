@@ -50,6 +50,6 @@ public class CompanyController {
 
     @DeleteMapping("/{id}")
     public boolean deleteAllEmployeesByCompanyId(@PathVariable int id) {
-        return companyService.deleteEmployeesById(id);
+        return companyService.deleteById(id);
     }
 }

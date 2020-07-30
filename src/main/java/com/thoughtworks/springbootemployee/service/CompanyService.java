@@ -55,14 +55,8 @@ public class CompanyService {
         return new ArrayList<>();
     }
 
-    public boolean deleteEmployeesById(int id) {
-        Company targetCompany = companyRepository.findById(id).orElse(null);
-        if (targetCompany != null) {
-            targetCompany.setEmployees(new ArrayList<>());
-            save(targetCompany);
-            return targetCompany.getEmployees().size() == 0;
-        } else {
-            return false;
-        }
+    public boolean deleteById(int id) {
+        companyRepository.deleteById(id);
+        return !companyRepository.findById(id).isPresent();
     }
 }

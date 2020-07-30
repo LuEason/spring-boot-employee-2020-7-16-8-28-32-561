@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,6 +22,8 @@ import static org.mockito.Mockito.when;
 public class CompanyServiceTest {
     private CompanyRepository mockedCompanyRepository;
     private CompanyService companyService;
+    private EmployeeRepository mockedEmployeeRepository;
+    private EmployeeService employeeService;
 
     private List<Company> generateCompanies() {
         List<Company> companies = new ArrayList<>();
@@ -46,6 +49,8 @@ public class CompanyServiceTest {
     void init() {
         mockedCompanyRepository = Mockito.mock(CompanyRepository.class);
         companyService = new CompanyService(mockedCompanyRepository);
+        mockedEmployeeRepository = Mockito.mock(EmployeeRepository.class);
+        employeeService = new EmployeeService(mockedEmployeeRepository);
     }
 
     @Test
@@ -92,13 +97,13 @@ public class CompanyServiceTest {
         int page = 2;
         int pageSize = 2;
         Page<Company> expectedCompanies = new PageImpl<>(Collections.singletonList(new Company()));
-        when(mockedCompanyRepository.findAll(PageRequest.of(page - 1, pageSize))).thenReturn(new PageImpl<>(expectedCompanies));
+        when(mockedCompanyRepository.findAll(PageRequest.of(page - 1, pageSize))).thenReturn(expectedCompanies);
 
         //when
         Page<Company> companies = companyService.findAll(page, pageSize);
 
         //then
-        Mockito.verify(mockedCompanyRepository).findAll(PageRequest.of(page, pageSize));
+        assertEquals(expectedCompanies, companies);
     }
 
     @Test
@@ -146,13 +151,10 @@ public class CompanyServiceTest {
         //given
         int id = 2;
         Company targetCompany = generateCompanies().stream().filter(company -> company.getId() == id).findFirst().orElse(null);
-        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == id).findFirst());
-        Company newCompany = targetCompany;
-        newCompany.setEmployees(new ArrayList<>());
-        when(mockedCompanyRepository.save(newCompany)).thenReturn(newCompany);
+        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == -1).findFirst());
 
         //when
-        boolean isDelete = companyService.deleteEmployeesById(id);
+        boolean isDelete = companyService.deleteById(id);
 
         //then
         assertTrue(isDelete);
