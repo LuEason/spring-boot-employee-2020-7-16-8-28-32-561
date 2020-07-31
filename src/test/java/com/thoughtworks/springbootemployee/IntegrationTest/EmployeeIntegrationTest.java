@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,8 +41,8 @@ public class EmployeeIntegrationTest {
     @Test
     void should_return_employees_when_hit_get_employees_given_null() throws Exception {
         //given
-        Employee employee = new Employee(3, "alibaba1", 20, "male", 6000);
-        Company company = new Company(1, "alibaba", 1, Collections.emptyList());
+        Employee employee = new Employee(null, "alibaba1", 20, "male", 6000);
+        Company company = new Company(null, "alibaba", 1, Collections.emptyList());
         Company newCompany = companyRepository.save(company);
         employee.setCompanyId(newCompany.getId());
         employeeRepository.save(employee);
@@ -59,8 +60,8 @@ public class EmployeeIntegrationTest {
     @Test
     void should_return_certain_employee_when_hit_get_employee_by_id_given_id() throws Exception {
         //given
-        Employee employee = new Employee(3, "alibaba1", 20, "male", 6000);
-        Company company = new Company(1, "alibaba", 1, Collections.emptyList());
+        Employee employee = new Employee(null, "alibaba1", 20, "male", 6000);
+        Company company = new Company(null, "alibaba", 1, Collections.emptyList());
         Company newCompany = companyRepository.save(company);
         employee.setCompanyId(newCompany.getId());
         Employee newEmployee = employeeRepository.save(employee);
@@ -97,10 +98,9 @@ public class EmployeeIntegrationTest {
     @Test
     void should_return_employee_list_when_hit_get_EmployeesPagination_given_page_pageSize() throws Exception {
         //given
-        Employee firstEmployee = new Employee(3, "alibaba3", 20, "male", 6000);
-        Employee secondEmployee = new Employee(4, "alibaba4", 21, "male", 6000);
-        employeeRepository.save(firstEmployee);
-        employeeRepository.save(secondEmployee);
+        Employee firstEmployee = new Employee(null, "alibaba3", 20, "male", 6000);
+        Employee secondEmployee = new Employee(null, "alibaba4", 21, "male", 6000);
+        employeeRepository.saveAll(asList(firstEmployee, secondEmployee));
 
         List<Employee> employees = employeeRepository.findAll(PageRequest.of(1, 3)).getContent();
 
