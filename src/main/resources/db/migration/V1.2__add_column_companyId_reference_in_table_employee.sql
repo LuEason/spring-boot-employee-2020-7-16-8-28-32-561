@@ -1,0 +1,1 @@
+alter table employee add column companyId int FOREIGN KEY REFERENCES company(id)

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,5 +109,22 @@ public class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.content.size()").value(2))
                 .andExpect(jsonPath("$.content[0].name").value(firstEmployee.getName()))
                 .andExpect(jsonPath("$.content[1].name").value(secondEmployee.getName()));
+    }
+
+    @Test
+    void should_return_male_employees_when_hit_get_employees_by_gender_given_male() throws Exception {
+        //given
+        String gender = "male";
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(null, "alibaba3", 20, "male", 6000));
+        employees.add(new Employee(null, "alibaba4", 21, "female", 6000));
+        employeeRepository.saveAll(employees);
+
+        mockMvc.perform(get("/employees?gender=" + gender))
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].name").value("alibaba3"))
+                .andExpect(jsonPath("$[0].age").value(20))
+                .andExpect(jsonPath("$[0].gender").value("male"))
+                .andExpect(jsonPath("$[0].salary").value(6000));
     }
 }
