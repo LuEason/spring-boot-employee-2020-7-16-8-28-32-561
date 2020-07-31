@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -100,13 +99,14 @@ public class EmployeeIntegrationTest {
         //given
         Employee firstEmployee = new Employee(null, "alibaba3", 20, "male", 6000);
         Employee secondEmployee = new Employee(null, "alibaba4", 21, "male", 6000);
-        employeeRepository.saveAll(asList(firstEmployee, secondEmployee));
+        employeeRepository.save(firstEmployee);
+        employeeRepository.save(secondEmployee);
 
         List<Employee> employees = employeeRepository.findAll(PageRequest.of(1, 3)).getContent();
 
         mockMvc.perform(get("/employees?page=1&pageSize=2"))
                 .andExpect(jsonPath("$.content.size()").value(2))
-                .andExpect(jsonPath("$.content[0].name").value("alibaba3"))
-                .andExpect(jsonPath("$.content[1].name").value("alibaba4"));
+                .andExpect(jsonPath("$.content[0].name").value(firstEmployee.getName()))
+                .andExpect(jsonPath("$.content[1].name").value(secondEmployee.getName()));
     }
 }
