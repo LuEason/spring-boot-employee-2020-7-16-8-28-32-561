@@ -52,7 +52,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteEmployee(@PathVariable int id) {
+    public boolean deleteEmployee(@PathVariable int id) throws NoSuchDataException {
         return employeeService.deleteById(id);
     }
 }

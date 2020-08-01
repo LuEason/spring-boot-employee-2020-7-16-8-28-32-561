@@ -58,9 +58,11 @@ public class EmployeeService {
         }
     }
 
-    public boolean deleteById(int id) {
+    public boolean deleteById(int id) throws NoSuchDataException {
+        if (!employeeRepository.findById(id).isPresent()) {
+            throw new NoSuchDataException();
+        }
         employeeRepository.deleteById(id);
-
-        return !employeeRepository.findById(id).isPresent();
+        return true;
     }
 }
