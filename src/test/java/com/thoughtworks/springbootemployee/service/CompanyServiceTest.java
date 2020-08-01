@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,7 +48,7 @@ class CompanyServiceTest {
     @BeforeEach
     void init() {
         mockedCompanyRepository = Mockito.mock(CompanyRepository.class);
-        companyService = new CompanyService(mockedCompanyRepository);
+        companyService = new CompanyService(mockedCompanyRepository, Mockito.mock(EmployeeRepository.class));
     }
 
     @Test
@@ -130,10 +132,11 @@ class CompanyServiceTest {
     void should_return_updated_company_when_update_company_give_company_id_and_target_company() {
         //given
         int id = 1;
-        Company targetCompany = generateCompanies().get(1);
+        Optional<Company> companyOption = generateCompanies().stream().filter(company -> company.getId() == id).findFirst();
+        when(mockedCompanyRepository.findById(id)).thenReturn(companyOption);
+        Company targetCompany = companyOption.get();
         targetCompany.setEmployeeNumber(0);
         targetCompany.setEmployees(new ArrayList<>());
-        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == id).findFirst());
         when(mockedCompanyRepository.save(targetCompany)).thenReturn(targetCompany);
 
         //when

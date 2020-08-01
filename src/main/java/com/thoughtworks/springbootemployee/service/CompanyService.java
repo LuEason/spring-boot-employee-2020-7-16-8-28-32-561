@@ -3,6 +3,7 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
+import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,11 @@ import java.util.List;
 @Service
 public class CompanyService {
     private final CompanyRepository companyRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    public CompanyService(CompanyRepository companyRepository, EmployeeRepository employeeRepository) {
         this.companyRepository = companyRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public List<Company> findAll() {
@@ -31,7 +34,12 @@ public class CompanyService {
     }
 
     public Company save(Company newCompany) {
-        return companyRepository.save(newCompany);
+        Company returnCompany = companyRepository.save(newCompany);
+        for (Employee employee : returnCompany.getEmployees()) {
+            employee.setCompanyId(returnCompany.getId());
+            employeeRepository.save(employee);
+        }
+        return returnCompany;
     }
 
     public Company updateCompany(int id, Company updatedCompany) {
