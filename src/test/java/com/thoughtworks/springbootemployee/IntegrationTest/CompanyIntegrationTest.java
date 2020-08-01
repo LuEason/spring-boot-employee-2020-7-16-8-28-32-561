@@ -16,8 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -102,6 +101,25 @@ class CompanyIntegrationTest {
                 .content(companyJson))
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.companyName").value("alibaba"))
+                .andExpect(jsonPath("$.employeeNumber").value(0));
+    }
+
+    @Test
+    void should_return_updated_company_when_hit_update_company_given_company_id_and_updated_company() throws Exception {
+        Company company = new Company(null, "alibaba", 0, Collections.emptyList());
+        company = companyRepository.save(company);
+        String companyJson = "{\n" +
+                "    \"id\": " + company.getId() + ", \n" +
+                "    \"companyName\": \"baidu\",\n" +
+                "    \"employeeNumber\": 0,\n" +
+                "    \"employees\": []\n" +
+                "}";
+
+        mockMvc.perform(put("/companies/" + company.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(companyJson))
+                .andExpect(jsonPath("$.id").value(company.getId()))
+                .andExpect(jsonPath("$.companyName").value("baidu"))
                 .andExpect(jsonPath("$.employeeNumber").value(0));
     }
 }
