@@ -46,7 +46,7 @@ class CompanyIntegrationTest {
     }
 
     @Test
-    void shoud_return_company_when_hit_get_company_by_id_given_id() throws Exception {
+    void should_return_company_when_hit_get_company_by_id_given_id() throws Exception {
         Company company = new Company(null, "alibaba", 0, Collections.emptyList());
         company = companyRepository.save(company);
 
@@ -54,5 +54,19 @@ class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.companyName").value(company.getCompanyName()))
                 .andExpect(jsonPath("$.id").value(company.getId()))
                 .andExpect(jsonPath("$.employeeNumber").value(company.getEmployeeNumber()));
+    }
+
+    @Test
+    void should_return_page_of_companies_when_hit_get_companies_pagination_given_page_and_pageSize() throws Exception {
+        int page = 1;
+        int pageSize = 2;
+        Company firstCompany = new Company(null, "alibaba", 0, Collections.emptyList());
+        Company secondCompany = new Company(null, "baidu", 0, Collections.emptyList());
+        List<Company> companies = companyRepository.saveAll(asList(firstCompany, secondCompany));
+
+        mockMvc.perform(get(String.format("/companies?page=%s&pageSize=%s", page, pageSize)))
+                .andExpect(jsonPath("$.content.size()").value(2))
+                .andExpect(jsonPath("$.content[0].companyName").value(companies.get(0).getCompanyName()))
+                .andExpect(jsonPath("$.content[1].companyName").value(companies.get(1).getCompanyName()));
     }
 }
