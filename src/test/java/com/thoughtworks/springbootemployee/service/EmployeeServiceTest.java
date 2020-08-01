@@ -114,8 +114,10 @@ public class EmployeeServiceTest {
     void should_return_updated_employee_when_update_employee_give_employee_id_and_target_employee() throws NoSuchDataException {
         //given
         int id = 1;
-        Employee targetEmployee = new Employee(1, "Xiaohong1", 20, "Male", 9000);
-        when(mockedEmployeeRepository.findById(id)).thenReturn(generateEmployees().stream().filter(employee -> employee.getId() == id).findFirst());
+        Optional<Employee> employeeOptional = generateEmployees().stream().filter(employee -> employee.getId() == id).findFirst();
+        Employee targetEmployee = employeeOptional.get();
+        targetEmployee.setName("Xiaohong1");
+        when(mockedEmployeeRepository.findById(id)).thenReturn(employeeOptional);
         when(mockedEmployeeRepository.save(targetEmployee)).thenReturn(targetEmployee);
 
         //when
