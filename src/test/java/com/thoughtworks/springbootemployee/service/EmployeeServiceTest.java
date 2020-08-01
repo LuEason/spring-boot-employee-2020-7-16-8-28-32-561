@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.service;
 
 import com.thoughtworks.springbootemployee.exception.NoSuchDataException;
+import com.thoughtworks.springbootemployee.exception.NotTheSameIDException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -140,6 +141,16 @@ public class EmployeeServiceTest {
         //when
         Exception exception = assertThrows(NoSuchDataException.class, () -> employeeService.updateEmployee(id, new Employee(5, "name", 20, "female", 10000)));
         assertEquals(NoSuchDataException.class, exception.getClass());
+    }
+
+    @Test
+    void should_throw_not_the_same_id_exception_when_the_id_is_different_from_the_updated_employee_id_given_id_and_updated_employee() {
+        //given
+        int id = 1;
+
+        //when
+        Exception exception = assertThrows(NotTheSameIDException.class, () -> employeeService.updateEmployee(id, generateEmployees().get(0)));
+        assertEquals(NotTheSameIDException.class, exception.getClass());
     }
 
     @Test
