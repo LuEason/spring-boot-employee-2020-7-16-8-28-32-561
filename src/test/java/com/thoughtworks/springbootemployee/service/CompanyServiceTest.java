@@ -1,5 +1,7 @@
 package com.thoughtworks.springbootemployee.service;
 
+import com.thoughtworks.springbootemployee.exception.NoSuchDataException;
+import com.thoughtworks.springbootemployee.exception.NotTheSameIDException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
@@ -16,8 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -129,6 +130,27 @@ class CompanyServiceTest {
     }
 
     @Test
+    void should_throw_no_such_data_exception_when_can_not_find_company_by_id_given_id_and_updated_company() {
+        //given
+        int id = 3;
+        when(mockedCompanyRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NoSuchDataException.class, () -> companyService.updateCompany(id, new Company(3, "tencent", 3, Collections.emptyList())));
+        assertEquals(NoSuchDataException.class, exception.getClass());
+    }
+
+    @Test
+    void should_throw_not_the_same_id_exception_when_the_id_is_different_from_the_updated_company_id_given_id_and_updated_company() {
+        //given
+        int id = 1;
+
+        //when
+        Exception exception = assertThrows(NotTheSameIDException.class, () -> companyService.updateCompany(id, generateCompanies().get(0)));
+        assertEquals(NotTheSameIDException.class, exception.getClass());
+    }
+
+    @Test
     void should_return_updated_company_when_update_company_give_company_id_and_target_company() {
         //given
         int id = 1;
@@ -150,7 +172,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_return_boolean_when_delete_company_employees_given_id() {
+    void should_return_boolean_when_delete_company_given_id() {
         //given
         int id = 2;
         when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == -1).findFirst());
@@ -160,5 +182,16 @@ class CompanyServiceTest {
 
         //then
         assertTrue(isDelete);
+    }
+
+    @Test
+    void should_throw_no_data_exception_when_delete_company_by_id_given_id() {
+        //given
+        int id = 3;
+        when(mockedCompanyRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NoSuchDataException.class, () -> companyService.deleteById(id));
+        assertEquals(NoSuchDataException.class, exception.getClass());
     }
 }
