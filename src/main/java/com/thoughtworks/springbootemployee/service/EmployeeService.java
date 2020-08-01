@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
+import com.thoughtworks.springbootemployee.exception.NoSuchDataException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class EmployeeService {
         return employeeRepository.save(newEmployee);
     }
 
-    public Employee updateEmployee(int id, Employee updatedEmployee) {
+    public Employee updateEmployee(int id, Employee updatedEmployee) throws NoSuchDataException {
         Employee targetEmployee = findById(id);
         if (targetEmployee != null) {
             if (updatedEmployee.getName() != null)

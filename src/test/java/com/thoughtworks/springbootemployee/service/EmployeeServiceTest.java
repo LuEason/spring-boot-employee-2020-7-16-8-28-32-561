@@ -1,5 +1,6 @@
 package com.thoughtworks.springbootemployee.service;
 
+import com.thoughtworks.springbootemployee.exception.NoSuchDataException;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -110,7 +111,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_updated_employee_when_update_employee_give_employee_id_and_target_employee() {
+    void should_return_updated_employee_when_update_employee_give_employee_id_and_target_employee() throws NoSuchDataException {
         //given
         int id = 1;
         Employee targetEmployee = new Employee(1, "Xiaohong1", 20, "Male", 9000);
@@ -126,6 +127,17 @@ public class EmployeeServiceTest {
         assertEquals(targetEmployee.getGender(), updatedEmployee.getGender());
         assertEquals(targetEmployee.getName(), updatedEmployee.getName());
         assertEquals(targetEmployee.getSalary(), updatedEmployee.getSalary());
+    }
+
+    @Test
+    void should_throw_no_data_exception_when_can_not_find_employee_by_id_given_id_and_updated_employee() {
+        //given
+        int id = 5;
+        when(mockedEmployeeRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NoSuchDataException.class, () -> employeeService.updateEmployee(id, new Employee()));
+        assertEquals(NoSuchDataException.class, exception.getClass());
     }
 
     @Test
