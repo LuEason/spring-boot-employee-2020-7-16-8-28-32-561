@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class EmployeeIntegrationTest {
+class EmployeeIntegrationTest {
     @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
@@ -34,7 +33,6 @@ public class EmployeeIntegrationTest {
     void afterEach() {
         companyRepository.deleteAll();
         employeeRepository.deleteAll();
-
     }
 
     @Test
@@ -101,8 +99,6 @@ public class EmployeeIntegrationTest {
         Employee secondEmployee = new Employee(null, "alibaba4", 21, "male", 6000);
         employeeRepository.save(firstEmployee);
         employeeRepository.save(secondEmployee);
-
-        List<Employee> employees = employeeRepository.findAll(PageRequest.of(1, 3)).getContent();
 
         mockMvc.perform(get("/employees?page=1&pageSize=2"))
                 .andExpect(jsonPath("$.content.size()").value(2))
