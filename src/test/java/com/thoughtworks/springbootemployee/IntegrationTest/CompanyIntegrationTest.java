@@ -1,6 +1,7 @@
 package com.thoughtworks.springbootemployee.IntegrationTest;
 
 import com.thoughtworks.springbootemployee.model.Company;
+import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
 import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -68,5 +69,21 @@ class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.content.size()").value(2))
                 .andExpect(jsonPath("$.content[0].companyName").value(companies.get(0).getCompanyName()))
                 .andExpect(jsonPath("$.content[1].companyName").value(companies.get(1).getCompanyName()));
+    }
+
+    @Test
+    void should_return_employees_when_hit_get_employees_by_company_id_given_company_id() throws Exception {
+        Employee employee = new Employee(null, "alibaba1", 20, "male", 6000);
+        Company company = new Company(null, "alibaba", 1, Collections.emptyList());
+        Company newCompany = companyRepository.save(company);
+        employee.setCompanyId(newCompany.getId());
+        employeeRepository.save(employee);
+
+        mockMvc.perform(get(String.format("/companies/%s/employees", company.getId())))
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].name").value(employee.getName()))
+                .andExpect(jsonPath("$[0].age").value(employee.getAge()))
+                .andExpect(jsonPath("$[0].gender").value(employee.getGender()))
+                .andExpect(jsonPath("$[0].salary").value(employee.getSalary()));
     }
 }
