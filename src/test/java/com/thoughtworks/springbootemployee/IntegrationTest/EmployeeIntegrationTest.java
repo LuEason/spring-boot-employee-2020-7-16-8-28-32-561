@@ -142,4 +142,14 @@ class EmployeeIntegrationTest {
                 .andExpect(jsonPath("$.age").value(employee.getAge() + 1))
                 .andExpect(jsonPath("$.gender").value(employee.getGender()));
     }
+
+    @Test
+    void should_return_true_when_hit_delete_employee_by_id_given_id() throws Exception {
+        Employee employee = new Employee(null, "alibaba3", 20, "male", 6000);
+        employee = employeeRepository.save(employee);
+
+        mockMvc.perform(delete("/employees/" + employee.getId()))
+                .andExpect(jsonPath("$").value(true));
+
+    }
 }
