@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class EmployeeServiceTest {
@@ -69,7 +70,7 @@ public class EmployeeServiceTest {
         int page = 2;
         int pageSize = 2;
         Page<Employee> expectedEmployees = new PageImpl<>(Collections.singletonList(new Employee()));
-        when(mockedEmployeeRepository.findAll(PageRequest.of(page - 1, pageSize))).thenReturn(expectedEmployees);
+        when(mockedEmployeeRepository.findAll(any(PageRequest.class))).thenReturn(expectedEmployees);
 
         //when
         Page<Employee> employees = employeeService.findAll(page - 1, pageSize);

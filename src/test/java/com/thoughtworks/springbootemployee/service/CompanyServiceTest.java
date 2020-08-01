@@ -17,13 +17,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class CompanyServiceTest {
     private CompanyRepository mockedCompanyRepository;
     private CompanyService companyService;
     private EmployeeRepository mockedEmployeeRepository;
-    private EmployeeService employeeService;
 
     private List<Company> generateCompanies() {
         List<Company> companies = new ArrayList<>();
@@ -50,7 +50,6 @@ public class CompanyServiceTest {
         mockedCompanyRepository = Mockito.mock(CompanyRepository.class);
         companyService = new CompanyService(mockedCompanyRepository);
         mockedEmployeeRepository = Mockito.mock(EmployeeRepository.class);
-        employeeService = new EmployeeService(mockedEmployeeRepository);
     }
 
     @Test
@@ -97,7 +96,7 @@ public class CompanyServiceTest {
         int page = 2;
         int pageSize = 2;
         Page<Company> expectedCompanies = new PageImpl<>(Collections.singletonList(new Company()));
-        when(mockedCompanyRepository.findAll(PageRequest.of(page - 1, pageSize))).thenReturn(expectedCompanies);
+        when(mockedCompanyRepository.findAll(any(PageRequest.class))).thenReturn(expectedCompanies);
 
         //when
         Page<Company> companies = companyService.findAll(page, pageSize);
