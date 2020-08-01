@@ -1,5 +1,7 @@
 package com.thoughtworks.springbootemployee.service;
 
+import com.thoughtworks.springbootemployee.exception.NoSuchDataException;
+import com.thoughtworks.springbootemployee.exception.NotTheSameIDException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
@@ -42,7 +44,10 @@ public class CompanyService {
         return returnCompany;
     }
 
-    public Company updateCompany(int id, Company updatedCompany) {
+    public Company updateCompany(int id, Company updatedCompany) throws NotTheSameIDException, NoSuchDataException {
+        if (!updatedCompany.getId().equals(id)) {
+            throw new NotTheSameIDException();
+        }
         Company targetCompany = findById(id);
         if (targetCompany != null) {
             if (updatedCompany.getCompanyName() != null)
@@ -51,9 +56,10 @@ public class CompanyService {
                 targetCompany.setEmployeeNumber(updatedCompany.getEmployeeNumber());
             if (updatedCompany.getEmployees() != null)
                 targetCompany.setEmployees(updatedCompany.getEmployees());
-            save(targetCompany);
+            return save(targetCompany);
+        } else {
+            throw new NoSuchDataException();
         }
-        return targetCompany;
     }
 
     public List<Employee> findEmployeesById(int id) {
@@ -63,8 +69,12 @@ public class CompanyService {
         return new ArrayList<>();
     }
 
-    public boolean deleteById(int id) {
+    public boolean deleteById(int id) throws NoSuchDataException {
+        if (!companyRepository.findById(id).isPresent()) {
+            throw new NoSuchDataException();
+        }
+        // NoSuchDataException
         companyRepository.deleteById(id);
-        return !companyRepository.findById(id).isPresent();
+        return true;
     }
 }

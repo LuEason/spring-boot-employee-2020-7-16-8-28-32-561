@@ -1,5 +1,7 @@
 package com.thoughtworks.springbootemployee.controller;
 
+import com.thoughtworks.springbootemployee.exception.NoSuchDataException;
+import com.thoughtworks.springbootemployee.exception.NotTheSameIDException;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.service.CompanyService;
@@ -46,12 +48,12 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public Company updateCompany(@PathVariable int id, @RequestBody Company newCompany) {
+    public Company updateCompany(@PathVariable int id, @RequestBody Company newCompany) throws NoSuchDataException, NotTheSameIDException {
         return companyService.updateCompany(id, newCompany);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteAllEmployeesByCompanyId(@PathVariable int id) {
+    public boolean deleteAllEmployeesByCompanyId(@PathVariable int id) throws NoSuchDataException {
         return companyService.deleteById(id);
     }
 }

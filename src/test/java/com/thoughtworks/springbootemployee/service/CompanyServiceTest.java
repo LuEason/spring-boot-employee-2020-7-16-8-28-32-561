@@ -151,7 +151,7 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_return_updated_company_when_update_company_give_company_id_and_target_company() {
+    void should_return_updated_company_when_update_company_give_company_id_and_target_company() throws NoSuchDataException, NotTheSameIDException {
         //given
         int id = 1;
         Optional<Company> companyOption = generateCompanies().stream().filter(company -> company.getId() == id).findFirst();
@@ -172,10 +172,10 @@ class CompanyServiceTest {
     }
 
     @Test
-    void should_return_boolean_when_delete_company_given_id() {
+    void should_return_boolean_when_delete_company_given_id() throws NoSuchDataException {
         //given
         int id = 2;
-        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == -1).findFirst());
+        when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == id).findFirst());
 
         //when
         boolean isDelete = companyService.deleteById(id);
