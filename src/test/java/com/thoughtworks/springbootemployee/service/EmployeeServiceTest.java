@@ -165,6 +165,7 @@ public class EmployeeServiceTest {
         //then
         assertTrue(isDelete);
         Mockito.verify(mockedEmployeeRepository).deleteById(id);
+    }
 
     }
 }
