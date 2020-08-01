@@ -123,6 +123,10 @@ public class CompanyServiceTest {
         assertEquals(newCompany.getCompanyName(), returnCompany.getCompanyName());
         assertEquals(newCompany.getEmployeeNumber(), returnCompany.getEmployeeNumber());
         assertEquals(newCompany.getEmployees(), returnCompany.getEmployees());
+
+        for (Employee employee : newCompany.getEmployees()) {
+            assertEquals(returnCompany.getId(), employee.getCompanyId());
+        }
     }
 
     @Test
