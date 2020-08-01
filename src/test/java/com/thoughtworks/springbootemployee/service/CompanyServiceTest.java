@@ -3,7 +3,6 @@ package com.thoughtworks.springbootemployee.service;
 import com.thoughtworks.springbootemployee.model.Company;
 import com.thoughtworks.springbootemployee.model.Employee;
 import com.thoughtworks.springbootemployee.repository.CompanyRepository;
-import com.thoughtworks.springbootemployee.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,10 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class CompanyServiceTest {
+class CompanyServiceTest {
     private CompanyRepository mockedCompanyRepository;
     private CompanyService companyService;
-    private EmployeeRepository mockedEmployeeRepository;
 
     private List<Company> generateCompanies() {
         List<Company> companies = new ArrayList<>();
@@ -49,7 +47,6 @@ public class CompanyServiceTest {
     void init() {
         mockedCompanyRepository = Mockito.mock(CompanyRepository.class);
         companyService = new CompanyService(mockedCompanyRepository);
-        mockedEmployeeRepository = Mockito.mock(EmployeeRepository.class);
     }
 
     @Test
@@ -153,7 +150,6 @@ public class CompanyServiceTest {
     void should_return_boolean_when_delete_company_employees_given_id() {
         //given
         int id = 2;
-        Company targetCompany = generateCompanies().stream().filter(company -> company.getId() == id).findFirst().orElse(null);
         when(mockedCompanyRepository.findById(id)).thenReturn(generateCompanies().stream().filter(company -> company.getId() == -1).findFirst());
 
         //when
