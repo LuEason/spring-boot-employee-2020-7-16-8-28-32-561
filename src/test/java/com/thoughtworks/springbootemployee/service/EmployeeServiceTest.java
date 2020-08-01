@@ -112,7 +112,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    void should_return_updated_employee_when_update_employee_give_employee_id_and_target_employee() throws NoSuchDataException {
+    void should_return_updated_employee_when_update_employee_give_employee_id_and_target_employee() throws NoSuchDataException, NotTheSameIDException {
         //given
         int id = 1;
         Optional<Employee> employeeOptional = generateEmployees().stream().filter(employee -> employee.getId() == id).findFirst();
