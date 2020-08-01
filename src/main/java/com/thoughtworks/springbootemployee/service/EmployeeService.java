@@ -48,9 +48,10 @@ public class EmployeeService {
                 targetEmployee.setAge(updatedEmployee.getAge());
             if (updatedEmployee.getSalary() != null)
                 targetEmployee.setSalary(updatedEmployee.getSalary());
-            save(targetEmployee);
+            return save(targetEmployee);
+        } else {
+            throw new NoSuchDataException();
         }
-        return targetEmployee;
     }
 
     public boolean deleteById(int id) {
