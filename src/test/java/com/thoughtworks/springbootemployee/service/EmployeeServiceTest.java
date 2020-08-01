@@ -167,5 +167,14 @@ public class EmployeeServiceTest {
         Mockito.verify(mockedEmployeeRepository).deleteById(id);
     }
 
+    @Test
+    void should_throw_no_data_exception_when_delete_employee_by_id_given_id() {
+        //given
+        int id = 5;
+        when(mockedEmployeeRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NoSuchDataException.class, () -> employeeService.deleteById(id));
+        assertEquals(NoSuchDataException.class, exception.getClass());
     }
 }
