@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CompanyIntegrationTest {
+class CompanyIntegrationTest {
     @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
@@ -43,5 +43,16 @@ public class CompanyIntegrationTest {
                 .andExpect(jsonPath("$.size()").value(2))
                 .andExpect(jsonPath("$[0].companyName").value(firstCompany.getCompanyName()))
                 .andExpect(jsonPath("$[1].companyName").value(secondCompany.getCompanyName()));
+    }
+
+    @Test
+    void shoud_return_company_when_hit_get_company_by_id_given_id() throws Exception {
+        Company company = new Company(null, "alibaba", 0, Collections.emptyList());
+        company = companyRepository.save(company);
+
+        mockMvc.perform(get("/companies/" + company.getId()))
+                .andExpect(jsonPath("$.companyName").value(company.getCompanyName()))
+                .andExpect(jsonPath("$.id").value(company.getId()))
+                .andExpect(jsonPath("$.employeeNumber").value(company.getEmployeeNumber()));
     }
 }
