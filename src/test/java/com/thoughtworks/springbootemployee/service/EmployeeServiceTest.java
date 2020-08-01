@@ -138,7 +138,7 @@ public class EmployeeServiceTest {
         when(mockedEmployeeRepository.findById(id)).thenReturn(Optional.empty());
 
         //when
-        Exception exception = assertThrows(NoSuchDataException.class, () -> employeeService.updateEmployee(id, new Employee()));
+        Exception exception = assertThrows(NoSuchDataException.class, () -> employeeService.updateEmployee(id, new Employee(5, "name", 20, "female", 10000)));
         assertEquals(NoSuchDataException.class, exception.getClass());
     }
 
