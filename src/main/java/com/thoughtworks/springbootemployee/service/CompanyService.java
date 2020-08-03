@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class CompanyService {
         return companyRepository.findById(id).orElse(null);
     }
 
+    @Transient
     public Company save(Company newCompany) {
         Company returnCompany = companyRepository.save(newCompany);
         for (Employee employee : returnCompany.getEmployees()) {
